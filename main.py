@@ -1,4 +1,3 @@
-import numpy as np
 from genetic import GeneticAlgorithm
 
 def fitness(coef):
@@ -9,5 +8,5 @@ def fitness(coef):
     else:
         return l*w*h
 
-ga = GeneticAlgorithm(3)
-print(ga.run(fitness))
+ga = GeneticAlgorithm(3, 1000, 0, 5)
+print(ga.run(fitness, epochs=200, verbose=True))
