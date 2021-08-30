@@ -10,4 +10,4 @@ def fitness(coef):
         return l*w*h
 
 ga = GeneticAlgorithm(3)
-ga.run(fitness)
+print(ga.run(fitness))
