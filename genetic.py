@@ -98,8 +98,7 @@ class GeneticAlgorithm:
         return params
 
     def run(self, fitness, epochs=1000, p_cross=0.5, p_mutate=0.15, 
-            pct_best=0.01, max_mutation=0.1, maximize=True, verbose=False,
-            visualize=False):
+            pct_best=0.01, max_mutation=0.1, maximize=True, verbose=False):
         """
         Runs the genetic algorithm for a given number of epochs.
         
@@ -122,6 +121,8 @@ class GeneticAlgorithm:
         maximize : bool (default True)
                 Maximize the fitness function if True and minimize the 
                 function if False.
+        verbose: int (default False)
+                The epoch interval at which logging information is printed.
 
         Returns
         -------
@@ -135,7 +136,7 @@ class GeneticAlgorithm:
         for i in range(1, epochs+1):
             best = self._select_n_best(self.population, fitness, 
                                         n_best, maximize)
-            if verbose and i % verbose == 0:
+            if verbose > 0 and i % verbose == 0:
                 print("Epoch {:5d} | Fitness: {:.6f} | Best Params: {}"
                                     .format(i, fitness(best[0]), best[0]))
 
@@ -145,6 +146,6 @@ class GeneticAlgorithm:
                                         self._mutate, 1, 
                                         self.population[n_best:], p_mutate,
                                          max_mutation), p_cross)
-        if verbose:
+        if verbose > 0:
             print("Running time: {:.3f} seconds".format(time.time()-start))
         return self._select_n_best(self.population, fitness, 1, maximize)[0]
