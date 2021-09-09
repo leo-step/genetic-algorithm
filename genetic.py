@@ -99,7 +99,7 @@ class GeneticAlgorithm:
 
     def run(self, fitness, epochs=1000, p_cross=0.5, p_mutate=0.15, 
             pct_best=0.01, max_mutation=0.1, maximize=True, verbose=False,
-            save_best_params=False):
+            history=False):
         """
         Runs the genetic algorithm for a given number of epochs.
         
@@ -124,7 +124,7 @@ class GeneticAlgorithm:
                 function if False.
         verbose: int (default False)
                 The epoch interval at which logging information is printed.
-        save_best_params: bool (default False)
+        history: bool (default False)
                 Saves the history of the best parameters at the verbosity interval 
                 in self.best_params_history.
 
@@ -136,26 +136,37 @@ class GeneticAlgorithm:
         start = time.time()
         n_best = max(int(self.size*pct_best), 1)
         n_tiles = int(self.size/n_best)
-        history = []
+        history_list = []
 
         for i in range(1, epochs+1):
+            # select the n best individuals
             best = self._select_n_best(self.population, fitness, 
                                         n_best, maximize)
-            if verbose > 0 and i % verbose == 0:
-                print("Epoch {:5d} | Fitness: {:.6f} | Best Params: {}"
-                                    .format(i, fitness(best[0]), best[0]))
-                if save_best_params:
-                    history.append(best[0])
 
+            # print and save history if set
+            if verbose > 0 and i % verbose == 0:
+                print("Epoch {:5d} | Fitness: {:10.3f} | Best Params: {}"
+                                    .format(i, fitness(best[0]), best[0]))
+                if history:
+                    history_list.append(best[0])
+
+            # increase population back to original size by 
+            # replicating the best parameters
             self.population = np.tile(best, (n_tiles, 1))
 
+            # perform crossover and mutation while keeping an untouched 
+            # copy of the best parameters
             self.population[n_best:] = self._crossover(np.apply_along_axis(
                                         self._mutate, 1, 
                                         self.population[n_best:], p_mutate,
                                          max_mutation), p_cross)
 
-        self.best_params_history = np.stack(history, axis=0)
+        # combine history into a 2D numpy array
+        self.best_params_history = np.stack(history_list, axis=0)
 
+        # print the running time if verbose
         if verbose > 0:
             print("Running time: {:.3f} seconds".format(time.time()-start))
+        
+        # select and return the best individual
         return self._select_n_best(self.population, fitness, 1, maximize)[0]
