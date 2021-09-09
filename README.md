@@ -1,5 +1,5 @@
 # genetic-algorithm
-An implementation of a genetic algorithm that optimizes the volume of a cylinder while constrained to a maximum surface area.
+A genetic algorithm that optimizes the volume of a cylinder while constrained to a maximum surface area.
 
 ## Installation
 ```
