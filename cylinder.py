@@ -1,6 +1,9 @@
 from genetic import GeneticAlgorithm
+import matplotlib.pyplot as plt
 import numpy as np
-from viz import visualize
+from visual import visualize_params
+
+path = "visual.png"
 
 def fitness(params, max_surface_area=600):
     r, h = params[0], params[1]
@@ -12,8 +15,8 @@ def fitness(params, max_surface_area=600):
 
 ga = GeneticAlgorithm(2, 1000, 0, 1)
 
-print(ga.run(fitness, epochs=10, verbose=1, save_best_params=True, 
-                save_populations=True))
+print(ga.run(fitness, epochs=500, verbose=10, save_best_params=True))
 
-visualize("PUT PATH HERE", fitness, ga.best_param_history, 
-                ga.population_history)
+visualize_params(path, fitness, ga.best_params_history,
+                x_label="radius", y_label="height", 
+                z_label="fitness (volume)", x_max=12)
