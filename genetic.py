@@ -98,7 +98,8 @@ class GeneticAlgorithm:
         return params
 
     def run(self, fitness, epochs=1000, p_cross=0.5, p_mutate=0.15, 
-            pct_best=0.01, max_mutation=0.1, maximize=True, verbose=False):
+            pct_best=0.01, max_mutation=0.1, maximize=True, verbose=False,
+            save_best_params=False, save_populations=False):
         """
         Runs the genetic algorithm for a given number of epochs.
         
@@ -123,6 +124,12 @@ class GeneticAlgorithm:
                 function if False.
         verbose: int (default False)
                 The epoch interval at which logging information is printed.
+        save_best_params: bool (default False)
+                Saves the history of the best parameters at the verbosity interval 
+                in self.best_param_history.
+        save_populations: bool (default False)
+                Saves the history of populations at the verbosit interval in
+                self.population_history.
 
         Returns
         -------
@@ -132,6 +139,8 @@ class GeneticAlgorithm:
         start = time.time()
         n_best = max(int(self.size*pct_best), 1)
         n_tiles = int(self.size/n_best)
+        self.best_param_history = []
+        self.population_history = []
 
         for i in range(1, epochs+1):
             best = self._select_n_best(self.population, fitness, 
@@ -139,6 +148,10 @@ class GeneticAlgorithm:
             if verbose > 0 and i % verbose == 0:
                 print("Epoch {:5d} | Fitness: {:.6f} | Best Params: {}"
                                     .format(i, fitness(best[0]), best[0]))
+                if save_best_params:
+                    self.best_param_history.append(best[0])
+                if save_populations:
+                    self.population_history.append(self.population)
 
             self.population = np.tile(best, (n_tiles, 1))
 
