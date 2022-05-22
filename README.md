@@ -1,7 +1,7 @@
 # genetic-algorithm
-A genetic algorithm that optimizes the volume of a cylinder while constrained to a maximum surface area.
+A genetic algorithm implementation in NumPy that optimizes the volume of a cylinder while constrained to a maximum surface area.
 
-## Installation
+## Install and Run
 ```
 pip install -r requirements.txt
 python cylinder.py
